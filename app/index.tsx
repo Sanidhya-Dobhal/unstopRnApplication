@@ -12,13 +12,13 @@ export default function Index() {
   const [areDetailsInvalid, setAreDetailsInvalid] = useState(false);
   async function onNext() {
     if (name.length > 0 && phoneNumber.length === 10) {
-      const respFromBackEnd = await axios.post(
-        "https://unstop-final-backend.onrender.com/login",
-        {
-          name: name,
-          phone_no: phoneNumber,
-        }
-      );
+      // const respFromBackEnd = await axios.post(
+      //   "https://unstop-final-backend.onrender.com/login",
+      //   {
+      //     name: name,
+      //     phone_no: phoneNumber,
+      //   }
+      // );
       navigation.navigate({
         name: "Dashboard/index",
       });

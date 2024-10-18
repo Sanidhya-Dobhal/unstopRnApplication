@@ -1,6 +1,14 @@
-import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  TextInput,
+  Pressable,
+  Platform,
+} from "react-native";
 import React, { useState } from "react";
-import MapView, { Marker } from "react-native-maps";
+import MapView, { Marker, Polyline } from "react-native-maps";
+import polyline from "@mapbox/polyline";
 import { Image } from "expo-image";
 import BasicButton from "../CustomComponents/BasicButton";
 import axios from "axios";
@@ -8,9 +16,20 @@ export default function Dashboard() {
   const [selectedVehicle, setSelectedVehicle] = useState("DRIVE");
   const [startingPoint, setStartingPoint] = useState("");
   const [endingPoint, setEndingPoint] = useState("");
+  const [polylineData, setPolylineData] = useState([]);
   function vehiclePressHandler(vehicle: string) {
     console.log("The vehicle", vehicle);
     setSelectedVehicle(vehicle);
+  }
+  function polylineDecoder(encodedPolyline: string) {
+    const decodedCoordinates = polyline.decode(encodedPolyline);
+    const decodedCoordinatesObjectArray = decodedCoordinates.map(
+      ([latitude, longitude]) => ({
+        latitude: latitude,
+        longitude: longitude,
+      })
+    );
+    setPolylineData(decodedCoordinatesObjectArray);
   }
   async function optimumRouteSearchHandler() {
     const optimumRouteResp = await axios.post(
@@ -21,7 +40,10 @@ export default function Dashboard() {
         travelModes: selectedVehicle,
       }
     );
-    console.log(optimumRouteResp.data.msg.routes);
+    const optimumRouteInfo = optimumRouteResp.data.msg.routes;
+    console.log("logged 1", optimumRouteInfo[0].polyline.encodedPolyline);
+    polylineDecoder(optimumRouteInfo[0].polyline.encodedPolyline);
+    console.log("I am here");
   }
   return (
     <View style={styles.parentView}>
@@ -112,6 +134,11 @@ export default function Dashboard() {
           coordinate={{ latitude: 13.124966, longitude: 77.589632 }}
           draggable
         ></Marker>
+        <Polyline
+          coordinates={polylineData}
+          strokeColor={Platform.OS === "ios" ? "pink" : "blue"}
+          strokeWidth={5}
+        />
       </MapView>
     </View>
   );
