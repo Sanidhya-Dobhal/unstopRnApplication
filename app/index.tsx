@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import BasicButton from "./CustomComponents/BasicButton.tsx";
+import BasicButton from "./CustomComponents/BasicButton";
 import { useState } from "react";
 import axios from "axios";
 import { useNavigation } from "expo-router";
@@ -20,7 +20,7 @@ export default function Index() {
         }
       );
       navigation.navigate({
-        name: "OtpValidation/index",
+        name: "Dashboard/index",
       });
     } else {
       setAreDetailsInvalid(true);
