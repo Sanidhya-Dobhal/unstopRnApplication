@@ -1,29 +1,32 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button } from 'react-native';
-import * as Location from 'expo-location';
-import { getDistance } from 'geolib';
-import { TextInput } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { View, Text, Button } from "react-native";
+import * as Location from "expo-location";
+import { getDistance } from "geolib";
+import { TextInput } from "react-native";
+import BasicButton from "../CustomComponents/BasicButton";
 type ReqObj = {
-  id: number, origin: {
-    latitude: number,
-    longitude: number
-  },
-  destination: string,
-  radius: number
-}
-
+  id: number;
+  origin: {
+    latitude: number;
+    longitude: number;
+  };
+  destination: string;
+  radius: number;
+};
 
 const RideshareRequestComponent = ({ radius = 500 }) => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [request, setRequest] = useState<ReqObj | null>(null);
-  const [destination, setDestination] = useState('');
+  const [destination, setDestination] = useState("");
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
-      if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
         return;
       }
 
@@ -33,7 +36,8 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
   }, []);
 
   const createRequest = () => {
-    if (!location || !destination) return (<Text>Destination or location not provided.</Text>);
+    if (!location || !destination)
+      return <Text>Destination or location not provided.</Text>;
 
     const newRequest: ReqObj = {
       id: Date.now(),
@@ -47,16 +51,13 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
 
     setRequest(newRequest);
     // Here you would typically send this request to your backend
-    console.log('New request created:', newRequest);
+    console.log("New request created:", newRequest);
   };
 
   const checkIfInGeofence = (userLocation: any) => {
     if (!request) return false;
 
-    const distance = getDistance(
-      request.origin,
-      userLocation
-    );
+    const distance = getDistance(request.origin, userLocation);
 
     return distance <= request.radius;
   };
@@ -64,7 +65,7 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
   // Simulating other users checking the request
   const checkRequest = () => {
     if (!request) {
-      console.log('No active request');
+      console.log("No active request");
       return;
     }
 
@@ -75,7 +76,7 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
     };
 
     const canSeeRequest = checkIfInGeofence(userLocation);
-    console.log(`User ${canSeeRequest ? 'can' : 'cannot'} see the request`);
+    console.log(`User ${canSeeRequest ? "can" : "cannot"} see the request`);
   };
 
   if (errorMsg) {
@@ -84,19 +85,26 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
 
   return (
     <View style={{ marginTop: 250 }}>
-      <Text>Your location:
-        {location ? `${location.coords.latitude}, ${location.coords.longitude}` : 'Loading...'}
+      <Text>
+        Your location:
+        {location
+          ? `${location.coords.latitude}, ${location.coords.longitude}`
+          : "Loading..."}
       </Text>
       <TextInput
         placeholder="Enter destination"
+        placeholderTextColor={"gray"}
         value={destination}
         onChangeText={setDestination}
       />
-      <Button title="Create Request" onPress={createRequest} />
+      <BasicButton text="Request" onPressButton={createRequest} isLeft={true} />
       {request && (
         <View>
           <Text>Request created for destination: {request.destination}</Text>
-          <Button title="Simulate User Checking Request" onPress={checkRequest} />
+          <Button
+            title="Simulate User Checking Request"
+            onPress={checkRequest}
+          />
         </View>
       )}
     </View>

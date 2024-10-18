@@ -13,7 +13,7 @@ export default function Index() {
     );
     console.log("resppp", resp);
     if (resp.data.msg === "approved") {
-      navigation.navigate("Dashboard/index");
+      navigation.navigate("BestRoutes/index");
     } else {
       setIsWrongOtpEntered(true);
     }
