@@ -2,7 +2,7 @@ import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 import React, { useState } from "react";
 import MapView, { Marker } from "react-native-maps";
 import { Image } from "expo-image";
-import BasicButton from "../CustomComponents/BasicButton.tsx";
+import BasicButton from "../CustomComponents/BasicButton";
 import axios from "axios";
 export default function Dashboard() {
   const [selectedVehicle, setSelectedVehicle] = useState("DRIVE");
