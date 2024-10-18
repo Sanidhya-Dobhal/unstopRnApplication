@@ -16,6 +16,17 @@ export default function DashboardFooter() {
     >
       <Pressable
         onPress={() => {
+          navigation.navigate("Dashboard/index");
+        }}
+      >
+        <Image
+          source={require("../../Images/map.svg")}
+          style={styles.imgIconStyle}
+        />
+        <Text>Map</Text>
+      </Pressable>
+      <Pressable
+        onPress={() => {
           navigation.navigate("BestRoutes/index");
         }}
       >
@@ -25,14 +36,22 @@ export default function DashboardFooter() {
         />
         <Text>Best route</Text>
       </Pressable>
-      <Pressable>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("carPool/index");
+        }}
+      >
         <Image
           source={require("../../Images/carpool.svg")}
           style={styles.imgIconStyle}
         />
         <Text>Car pool</Text>
       </Pressable>
-      <Pressable>
+      <Pressable
+        onPress={() => {
+          navigation.navigate("Parking/index");
+        }}
+      >
         <Image
           source={require("../../Images/carParking.svg")}
           style={styles.imgIconStyle}

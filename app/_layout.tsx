@@ -8,9 +8,11 @@ export default function RootLayout() {
         name="OtpValidation/index"
         options={{ headerShown: false }}
       />
-      <Stack.Screen name="BestRoutes/index" options={{ headerShown: false }} />
       <Stack.Screen name="Dashboard/index" options={{ headerShown: false }} />
+      <Stack.Screen name="carPool/index" options={{ headerShown: false }} />
+      <Stack.Screen name="BestRoutes/index" options={{ headerShown: false }} />
       <Stack.Screen name="RideSharing/index" options={{ headerShown: false }} />
+      <Stack.Screen name="Parking/index" options={{ headerShown: false }} />
     </Stack>
   );
 }
