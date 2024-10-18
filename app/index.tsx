@@ -20,7 +20,7 @@ export default function Index() {
       //   }
       // );
       navigation.navigate({
-        name: "Dashboard/index",
+        name: "RideSharing/index",
       });
     } else {
       setAreDetailsInvalid(true);
