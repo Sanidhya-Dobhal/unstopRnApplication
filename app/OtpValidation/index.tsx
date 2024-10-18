@@ -1,23 +1,60 @@
+import axios from "axios";
+import { useNavigation } from "expo-router";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet, TextInput } from "react-native";
-import React from "react";
+import { OtpInput } from "react-native-otp-entry";
 
-export default function index() {
+export default function Index() {
+  async function verifyOTPCaller(enteredOTP: string) {
+    console.log("sadjk", typeof enteredOTP);
+    const resp = await axios.post(
+      "https://unstop-final-backend.onrender.com/verifyOTP",
+      { phone_no: "8859900177", otp: enteredOTP }
+    );
+    console.log("resppp", resp);
+    if (resp.data.msg === "approved") {
+      navigation.navigate("Dashboard/index");
+    } else {
+      setIsWrongOtpEntered(true);
+    }
+  }
+  const navigation = useNavigation();
+  const [isWrongOtpEntered, setIsWrongOtpEntered] = useState(false);
   return (
-    <View style={styles.parentDiv}>
+    <View style={styles.parentView}>
       <Text>Enter OTP</Text>
-      <TextInput
-        style={styles.textInputStyles}
-        keyboardType="numeric"
-      ></TextInput>
+      <OtpInput
+        numberOfDigits={4}
+        focusColor="green"
+        theme={{ pinCodeContainerStyle: styles.containerStyle }}
+        onFilled={(enteredOTP) => {
+          verifyOTPCaller(enteredOTP);
+        }}
+        onTextChange={(enteredOTP) => {
+          if (enteredOTP.length < 4) {
+            setIsWrongOtpEntered(false);
+          }
+        }}
+      />
+      <Text
+        style={{
+          marginTop: 10,
+          color: "red",
+          display: isWrongOtpEntered ? "flex" : "none",
+        }}
+      >
+        Wrong OTP Entered
+      </Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  parentDiv: {
+  parentView: {
     flex: 1,
     justifyContent: "center",
     marginLeft: 20,
+    marginRight: 20,
   },
   textInputStyles: {
     borderWidth: 2,
@@ -26,5 +63,9 @@ const styles = StyleSheet.create({
     fontSize: 25,
     paddingHorizontal: 7,
     paddingVertical: 5,
+  },
+  containerStyle: {
+    borderWidth: 2,
+    borderColor: "black",
   },
 });
