@@ -4,6 +4,7 @@ import * as Location from "expo-location";
 import { getDistance } from "geolib";
 import { TextInput } from "react-native";
 import BasicButton from "../CustomComponents/BasicButton";
+import axios from "axios";
 type ReqObj = {
   id: number;
   origin: {
@@ -21,6 +22,7 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [request, setRequest] = useState<ReqObj | null>(null);
   const [destination, setDestination] = useState("");
+  const [intervalId, setIntervalId] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     (async () => {
@@ -33,11 +35,34 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
       let location = await Location.getCurrentPositionAsync({});
       setLocation(location);
     })();
-  }, []);
 
-  const createRequest = () => {
-    if (!location || !destination)
-      return <Text>Destination or location not provided.</Text>;
+    // Clean up interval when the component unmounts
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId]);
+
+  async function updateLocation() {
+    console.log("Updating location");
+    if (!request) return;
+    const resp = await axios.post(
+      "https://unstop-final-backend.onrender.com/updatelocation",
+      {
+        latitude: request.origin.latitude,
+        longitude: request.origin.longitude,
+        phone_no: "8859900177",
+      }
+    );
+    console.log("resp", resp);
+  }
+
+  async function createRequest() {
+    if (!location || !destination) {
+      console.log("Destination or location not provided.");
+      return;
+    }
 
     const newRequest: ReqObj = {
       id: Date.now(),
@@ -50,9 +75,15 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
     };
 
     setRequest(newRequest);
-    // Here you would typically send this request to your backend
-    console.log("New request created:", newRequest);
-  };
+
+    // Start the interval to update location every 2 seconds
+    const id = setInterval(async () => {
+      await updateLocation();
+    }, 2000);
+
+    // Store the interval ID so it can be cleared later
+    setIntervalId(id);
+  }
 
   const checkIfInGeofence = (userLocation: any) => {
     if (!request) return false;
@@ -62,14 +93,12 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
     return distance <= request.radius;
   };
 
-  // Simulating other users checking the request
   const checkRequest = () => {
     if (!request) {
       console.log("No active request");
       return;
     }
 
-    // Simulate a user's location (in a real app, this would be the current user's location)
     const userLocation = {
       latitude: request.origin.latitude + (Math.random() - 0.5) * 0.01,
       longitude: request.origin.longitude + (Math.random() - 0.5) * 0.01,
@@ -97,12 +126,12 @@ const RideshareRequestComponent = ({ radius = 500 }) => {
         value={destination}
         onChangeText={setDestination}
       />
-      <BasicButton text="Request" onPressButton={createRequest} isLeft={true} />
+      <Button title="Create Request" onPress={createRequest} />
       {request && (
         <View>
           <Text>Request created for destination: {request.destination}</Text>
           <Button
-            title="Simulate User Checking Request"
+            title="Sfimulate User Checking Request"
             onPress={checkRequest}
           />
         </View>

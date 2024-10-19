@@ -3,6 +3,7 @@ import BasicButton from "./CustomComponents/BasicButton";
 import { useState } from "react";
 import { useNavigation } from "expo-router";
 import { Image } from "expo-image";
+import axios from "axios";
 
 export default function Index() {
   const navigation = useNavigation();
@@ -10,17 +11,18 @@ export default function Index() {
   const [name, setName] = useState("");
   const [areDetailsInvalid, setAreDetailsInvalid] = useState(false);
   async function onNext() {
-    navigation.navigate({
-      name: "Parking/index",
-    });
     if (name.length > 0 && phoneNumber.length === 10) {
-      // const respFromBackEnd = await axios.post(
-      //   "https://unstop-final-backend.onrender.com/login",
-      //   {
-      //     name: name,
-      //     phone_no: phoneNumber,
-      //   }
-      // );
+      const respFromBackEnd = await axios.post(
+        "https://unstop-final-backend.onrender.com/login",
+        {
+          name: name,
+          phone_no: phoneNumber,
+        }
+      );
+      console.log("resp", respFromBackEnd.data);
+      navigation.navigate({
+        name: "OtpValidation/index",
+      });
     } else {
       setAreDetailsInvalid(true);
     }

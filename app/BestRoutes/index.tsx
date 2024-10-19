@@ -23,7 +23,9 @@ export default function BestRoutes() {
   const [isTime, setIsTime] = useState(false);
   const [time, setTime] = useState("");
   const devHeight = Dimensions.get("window").height;
+  const devWidth = Dimensions.get("window").width;
   function vehiclePressHandler(vehicle: string) {
+    // async function
     console.log("The vehicle", vehicle);
     setSelectedVehicle(vehicle);
   }
@@ -44,6 +46,10 @@ export default function BestRoutes() {
       })
     );
     setPolylineData(decodedCoordinatesObjectArray);
+    console.log("dec", decodedCoordinatesObjectArray);
+  }
+  async function findNearestMetro() {
+    // axios.post("https://unstop-final-backend.onrender.com/neareststn",{"":});
   }
   async function optimumRouteSearchHandler() {
     const optimumRouteResp = await axios.post(
@@ -162,7 +168,25 @@ export default function BestRoutes() {
             key={1}
             coordinate={{ latitude: 13.124966, longitude: 77.589632 }}
             draggable
+            pinColor="white"
           ></Marker>
+          {polylineData[0] !== null ? (
+            <Marker
+              key={2}
+              coordinate={polylineData[0]}
+              pinColor="blue"
+            ></Marker>
+          ) : (
+            <></>
+          )}
+          {polylineData[polylineData.length - 1] !== null ? (
+            <Marker
+              key={3}
+              coordinate={polylineData[polylineData.length - 1]}
+            ></Marker>
+          ) : (
+            <></>
+          )}
           <Polyline
             coordinates={polylineData}
             strokeColor={Platform.OS === "ios" ? "pink" : "blue"}

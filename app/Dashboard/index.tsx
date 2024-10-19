@@ -1,6 +1,6 @@
 import { View, Dimensions, Platform } from "react-native";
 import React from "react";
-import MapView from "react-native-maps";
+import MapView, { Marker } from "react-native-maps";
 import DashboardFooter from "../CustomComponents/dashboardFooter";
 export default function Dashboard() {
   const devHeight = Dimensions.get("window").height;
@@ -16,7 +16,13 @@ export default function Dashboard() {
           longitudeDelta: 0.0421,
         }}
         style={{ height: devHeight }}
-      ></MapView>
+      >
+        <Marker
+          key={1}
+          coordinate={{ latitude: 13.124966, longitude: 77.589632 }}
+          draggable
+        ></Marker>
+      </MapView>
       <View
         style={{
           position: "absolute",

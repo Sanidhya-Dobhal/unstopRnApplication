@@ -4,6 +4,7 @@ import DashboardFooter from "../CustomComponents/dashboardFooter";
 import BasicButton from "../CustomComponents/BasicButton";
 import * as Location from "expo-location";
 import { getDistance } from "geolib";
+import axios from "axios";
 
 export default function CarPool({ radius = 500 }) {
   type ReqObj = {
@@ -51,6 +52,24 @@ export default function CarPool({ radius = 500 }) {
     setRequest(newRequest);
     // Here you would typically send this request to your backend
     console.log("New request created:", newRequest);
+    console.log("Dnasndksakj");
+    async function updateLocation() {
+      console.log("Updating location");
+      if (!request) return;
+      console.log(request.origin.latitude, request.origin.longitude);
+      const resp = await axios.post(
+        "https://unstop-final-backend.onrender.com/updatelocation",
+        {
+          latitude: request.origin.latitude,
+          longitude: request.origin.longitude,
+          phone_no: "8859900177",
+        }
+      );
+      console.log("resp", resp);
+    }
+    setInterval(() => {
+      updateLocation();
+    }, 6000);
   };
 
   const checkIfInGeofence = (userLocation: any) => {

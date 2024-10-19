@@ -7,10 +7,11 @@ import {
   StyleSheet,
   Keyboard,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import DashboardFooter from "../CustomComponents/dashboardFooter";
 import MapView, { Marker } from "react-native-maps";
 import BasicButton from "../CustomComponents/BasicButton";
+import * as Location from "expo-location";
 import axios from "axios";
 
 export default function index() {
@@ -18,9 +19,27 @@ export default function index() {
     latitude: 13.124966,
     longitude: 77.589632,
   });
+  const [location, setLocation] = useState<Location.LocationObject | null>(
+    null
+  );
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
   const [enteredRadius, setEnteredRadius] = useState("");
   const devHeight = Dimensions.get("window").height;
   const [usefulArr, setUsefulArr] = useState([]);
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        setErrorMsg("Permission to access location was denied");
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setLocation(location);
+    })();
+
+    // Clean up interval when the component unmounts
+  }, []);
   async function getParkingCall() {
     Keyboard.dismiss();
     console.log("reaching here");

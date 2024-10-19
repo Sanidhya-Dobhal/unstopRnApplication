@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useNavigation } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, TextInput } from "react-native";
+import { View, Text, StyleSheet, TextInput, Platform } from "react-native";
 import { OtpInput } from "react-native-otp-entry";
 
 export default function Index() {
@@ -9,7 +9,10 @@ export default function Index() {
     console.log("sadjk", typeof enteredOTP);
     const resp = await axios.post(
       "https://unstop-final-backend.onrender.com/verifyOTP",
-      { phone_no: "8859900177", otp: enteredOTP }
+      {
+        phone_no: Platform.OS === "ios" ? "8859900177" : "7558483544",
+        otp: enteredOTP,
+      }
     );
     console.log("resppp", resp);
     if (resp.data.msg === "approved") {
@@ -24,14 +27,14 @@ export default function Index() {
     <View style={styles.parentView}>
       <Text>Enter OTP</Text>
       <OtpInput
-        numberOfDigits={4}
+        numberOfDigits={6}
         focusColor="green"
         theme={{ pinCodeContainerStyle: styles.containerStyle }}
         onFilled={(enteredOTP) => {
           verifyOTPCaller(enteredOTP);
         }}
         onTextChange={(enteredOTP) => {
-          if (enteredOTP.length < 4) {
+          if (enteredOTP.length < 6) {
             setIsWrongOtpEntered(false);
           }
         }}
