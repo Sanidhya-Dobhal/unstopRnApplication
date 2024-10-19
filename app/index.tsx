@@ -10,6 +10,9 @@ export default function Index() {
   const [name, setName] = useState("");
   const [areDetailsInvalid, setAreDetailsInvalid] = useState(false);
   async function onNext() {
+    navigation.navigate({
+      name: "Parking/index",
+    });
     if (name.length > 0 && phoneNumber.length === 10) {
       // const respFromBackEnd = await axios.post(
       //   "https://unstop-final-backend.onrender.com/login",
@@ -18,9 +21,6 @@ export default function Index() {
       //     phone_no: phoneNumber,
       //   }
       // );
-      navigation.navigate({
-        name: "Dashboard/index",
-      });
     } else {
       setAreDetailsInvalid(true);
     }

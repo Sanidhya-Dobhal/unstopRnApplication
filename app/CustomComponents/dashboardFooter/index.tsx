@@ -36,7 +36,7 @@ export default function DashboardFooter() {
         />
         <Text>Best route</Text>
       </Pressable>
-      <Pressable
+      {/* <Pressable
         onPress={() => {
           navigation.navigate("carPool/index");
         }}
@@ -46,7 +46,7 @@ export default function DashboardFooter() {
           style={styles.imgIconStyle}
         />
         <Text>Car pool</Text>
-      </Pressable>
+      </Pressable> */}
       <Pressable
         onPress={() => {
           navigation.navigate("Parking/index");
