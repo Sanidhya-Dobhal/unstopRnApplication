@@ -21,7 +21,7 @@ export default function Index() {
       );
       console.log("resp", respFromBackEnd.data);
       navigation.navigate({
-        name: "OtpValidation/index",
+        name: "Dashboard/index",
       });
     } else {
       setAreDetailsInvalid(true);
